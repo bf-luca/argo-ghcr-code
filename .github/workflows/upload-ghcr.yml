@@ -11,8 +11,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
+      - run: cd helloserver
       - name: Install go dependencies
-        run: go get .
+        run: go install .
       - name: Build
         run: go build .
   
