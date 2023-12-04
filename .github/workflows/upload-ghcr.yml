@@ -8,23 +8,32 @@ on:
 jobs:
   build-app:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
         go-version: '1.21'
+
     - name: Set working directory
       run: cd helloserver
 
     - name: Initialize Go module
-      run: go mod init github.com/bf-luca/argo-ghcr-code/helloserver && go mod tidy
+      run: |
+        go mod init github.com/bf-luca/argo-ghcr-code/helloserver
+        go mod tidy
 
     - name: Build
-      run: go build -o helloserver -v ./helloserver
-      env:
-        GO111MODULE: on
-        GOPATH: ${{ github.workspace }}
+      run: go build -o helloserver ./helloserver
+
+    - name: Archive artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: helloserver-artifacts
+        path: helloserver
 
   
   unit-tests:
