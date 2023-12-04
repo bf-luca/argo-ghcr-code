@@ -18,10 +18,10 @@ jobs:
       run: cd helloserver
 
     - name: Initialize Go module
-      run: go mod init github.com/bf-luca/argo-ghcr-code/helloserver
+      run: go mod init github.com/bf-luca/argo-ghcr-code/helloserver && go mod tidy
 
     - name: Build
-      run: go build -o helloserver ./helloserver
+      run: go build -o helloserver
 
   
   unit-tests:
