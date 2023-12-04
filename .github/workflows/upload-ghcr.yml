@@ -21,7 +21,8 @@ jobs:
       run: go mod init github.com/bf-luca/argo-ghcr-code/helloserver
 
     - name: Build
-      run: go build -o helloserver
+      run: go build -o helloserver ./helloserver
+
   
   unit-tests:
     runs-on: ubuntu-latest
