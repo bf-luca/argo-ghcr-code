@@ -11,14 +11,8 @@
 package main
 
 import (
-	"flag"
-	"fmt"
-	"html"
-	"log"
-	"net/http"
-	"os"
-	"runtime/debug"
-	"strings"
+    "fmt"
+    "github.com/bf-luca/argo-ghcr-code/helloserver"
 )
 
 func usage() {
