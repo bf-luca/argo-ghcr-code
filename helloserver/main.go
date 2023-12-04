@@ -1,18 +1,15 @@
-// Copyright 2023 The Go Authors. All rights reserved.
-// Use of this source code is governed by a BSD-style
-// license that can be found in the LICENSE file.
-
-// Hello is a simple hello, world demonstration web server.
-//
-// It serves version information on /version and answers
-// any other request like /name by saying "Hello, name!".
-//
-// See golang.org/x/example/outyet for a more sophisticated server.
+// main.go
 package main
 
 import (
-    "fmt"
-    "github.com/bf-luca/argo-ghcr-code/helloserver"
+	"flag"
+	"fmt"
+	"log"
+	"net/http"
+	"os"
+	"runtime/debug"
+	"html"
+	"strings"
 )
 
 func usage() {
@@ -25,27 +22,6 @@ var (
 	greeting = flag.String("g", "Hello", "Greet with `greeting`")
 	addr     = flag.String("addr", ":8080", "address to serve")
 )
-
-func main() {
-	// Parse flags.
-	flag.Usage = usage
-	flag.Parse()
-
-	// Parse and validate arguments (none).
-	args := flag.Args()
-	if len(args) != 0 {
-		usage()
-	}
-
-	// Register handlers.
-	// All requests not otherwise mapped with go to greet.
-	// /version is mapped specifically to version.
-	http.HandleFunc("/", greet)
-	http.HandleFunc("/version", version)
-
-	log.Printf("serving http://%s\n", *addr)
-	log.Fatal(http.ListenAndServe(*addr, nil))
-}
 
 func version(w http.ResponseWriter, r *http.Request) {
 	info, ok := debug.ReadBuildInfo()
@@ -66,4 +42,25 @@ func greet(w http.ResponseWriter, r *http.Request) {
 
 	fmt.Fprintf(w, "<!DOCTYPE html>\n")
 	fmt.Fprintf(w, "%s, %s!\n", *greeting, html.EscapeString(name))
+}
+
+func main() {
+	// Parse flags.
+	flag.Usage = usage
+	flag.Parse()
+
+	// Parse and validate arguments (none).
+	args := flag.Args()
+	if len(args) != 0 {
+		usage()
+	}
+
+	// Register handlers.
+	// All requests not otherwise mapped with go to greet.
+	// /version is mapped specifically to version.
+	http.HandleFunc("/", greet)
+	http.HandleFunc("/version", version)
+
+	log.Printf("serving http://%s\n", *addr)
+	log.Fatal(http.ListenAndServe(*addr, nil))
 }
