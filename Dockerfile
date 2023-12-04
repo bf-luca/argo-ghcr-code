@@ -7,6 +7,7 @@ WORKDIR /app
 COPY ./helloserver /app
  
 # Builds your app with optional configuration
+RUN go mod init github.com/bf-luca/argo-ghcr-code/helloserver && go mod tidy
 RUN go build .
  
 # Tells Docker which network port your container listens on
