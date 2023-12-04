@@ -18,7 +18,7 @@ jobs:
       run: cd helloserver
 
     - name: Initialize Go module
-      run: go mod init
+      run: go mod init github.com/bf-luca/argo-ghcr-code/helloserver
 
     - name: Build
       run: go build -o helloserver
