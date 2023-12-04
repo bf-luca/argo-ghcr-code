@@ -11,7 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-go@v4
-      - run: cd ./helloserver
+      - run: cd /home/runner/work/argo-ghcr-code/helloserver
+      - run: echo $PWD
       - name: Install go dependencies
         run: go install .
       - name: Build
