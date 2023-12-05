@@ -73,6 +73,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
+          file: Dockerfile-helloserver
           context: .
           push: ${{ github.ref == 'refs/heads/main' }}
           tags: |
