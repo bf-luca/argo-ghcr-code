@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - 'hellotwo/*'
-      - 'Dockerfile-hellotwo'
+      - './hellotwo/*'
+      - './Dockerfile-hellotwo'
 
 # Not very safe
 permissions: write-all
