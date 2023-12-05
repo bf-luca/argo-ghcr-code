@@ -3,7 +3,9 @@ name: Build and Push to GHCR
 on:
   workflow_dispatch:
   push:
-    branches: ['main']
+    paths:
+      - 'helloserver/*'
+      - 'Dockerfile-helloserver'
 
 # Not very safe
 permissions: write-all
