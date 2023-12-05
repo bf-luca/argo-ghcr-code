@@ -46,7 +46,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: unit-tests
     permissions:
-      contents: read
+      contents: write
       packages: write
     steps:
       - name: Checkout repository
@@ -97,4 +97,4 @@ jobs:
           git commit -am "update image for sha: ${{ github.sha }}"
       - name: Push changes with PAT 
         run: |
-          git push https://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@github.com/bf-luca/argo-ghcr-k8s.git HEAD:main
+          git push https://${{ secrets.PAT_GITHUB_TOKEN }}@github.com/bf-luca/argo-ghcr-k8s.git HEAD:main
