@@ -96,9 +96,7 @@ jobs:
           git config --unset-all http.https://github.com/.extraheader
           git config --global user.name "bf-luca"
           git config --global user.email "luca.dreiling@bergfreunde.de"
-      - name: Update deployment.yaml
-        run: |
-          echo ${{ github.sha }}
+          
           sed -i "s#bf-luca/argo-ghcr-code#bf-luca/argo-ghcr-code:${{ github.sha }}#g" deployment.yaml
           git add -A
           git commit -am "update image for sha: ${{ github.sha }}"
