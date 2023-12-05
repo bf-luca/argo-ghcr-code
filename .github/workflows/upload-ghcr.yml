@@ -82,8 +82,6 @@ jobs:
       - uses: action/checkout@v3
         with:
           repository: bf-luca/argo-ghcr-k8s
-          ref: 'main'
-          token: ${{ secrets.GITHUB_TOKEN }}
       - name: setup git config
         run: |
           git config --global user.email "luca.dreiling@bergfreunde.de"
