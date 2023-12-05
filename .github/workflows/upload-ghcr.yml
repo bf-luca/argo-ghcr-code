@@ -98,7 +98,7 @@ jobs:
             persist-credentials: true
       - name: Update helm version
         run: |
-          sed -i "s#bf-luca/argo-ghcr-code#bf-luca/argo-ghcr-code:${{ github.sha }}#g" deployment.yaml
+          sed -i "s#bf-luca/argo-ghcr-code#bf-luca/argo-ghcr-code:${{ github.sha }}#g" dest/deployment.yaml
       - name: Push new files
         working-directory: dest  
         run: |
