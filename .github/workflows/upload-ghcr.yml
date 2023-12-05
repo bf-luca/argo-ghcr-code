@@ -78,6 +78,9 @@ jobs:
   update-manifest-repo:
     runs-on: ubuntu-latest
     needs: build-and-push-ghcr
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: action/checkout@v3
         with:
