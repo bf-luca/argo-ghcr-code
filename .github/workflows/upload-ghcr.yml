@@ -81,20 +81,26 @@ jobs:
       contents: write
       packages: write
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
       - uses: actions/checkout@v3
         with:
           repository: bf-luca/argo-ghcr-k8s
           ref: main
+          token: ${{ secrets.PAT_GITHUB_TOKEN }}
+          persist-credentials: true
       - name: Configure Git
         run: |
+          git config --global user.name "OCI Update Bot"
           git config --global user.email "luca.dreiling@bergfreunde.de"
-          git config --global user.name "bf-luca"
+          
+          git config --unset-all http.https://github.com/.extraheader
       - name: Update deployment.yaml
         run: |
           echo ${{ github.sha }}
           sed -i "s#bf-luca/argo-ghcr-code#bf-luca/argo-ghcr-code:${{ github.sha }}#g" deployment.yaml
           git add -A
           git commit -am "update image for sha: ${{ github.sha }}"
-      - name: Push changes with PAT 
-        run: |
-          git push https://bf-luca:${{ secrets.PAT_GITHUB_TOKEN }}@github.com/bf-luca/argo-ghcr-k8s.git HEAD:main
+          git push
