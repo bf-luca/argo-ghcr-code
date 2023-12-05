@@ -82,22 +82,24 @@ jobs:
       packages: write
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
-        with:
-          persist-credentials: false
-      - uses: actions/checkout@v3
-        with:
-          repository: bf-luca/argo-ghcr-k8s
-          ref: main
-          token: ${{ secrets.PAT_GITHUB_TOKEN }}
-          persist-credentials: true
+        uses: actions/checkout@v2
+  
+      - name: Checkout bf-luca/argo-ghcr-k8s
+        run: |
+          git init bf-luca/argo-ghcr-k8s
+          cd bf-luca/argo-ghcr-k8s
+          git remote add origin https://github.com/bf-luca/argo-ghcr-k8s.git
+          git fetch --depth=1 origin main
+          git checkout main
+  
       - name: Configure Git
         run: |
-          git config --unset-all http.https://github.com/.extraheader
           git config --global user.name "bf-luca"
           git config --global user.email "luca.dreiling@bergfreunde.de"
-          
-          sed -i "s#bf-luca/argo-ghcr-code#bf-luca/argo-ghcr-code:${{ github.sha }}#g" deployment.yaml
+  
+          sed -i "s#bf-luca/argo-ghcr-code#bf-luca/argo-ghcr-code:${{ github.sha }}#g" bf-luca/argo-ghcr-k8s/deployment.yaml
+  
+          cd bf-luca/argo-ghcr-k8s
           git add -A
-          git commit -am "update image for sha: ${{ github.sha }}"
-          git push
+          git commit -m "update image for sha: ${{ github.sha }}"
+          git push --set-upstream origin main
