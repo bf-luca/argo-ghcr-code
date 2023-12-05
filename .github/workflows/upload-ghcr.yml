@@ -93,10 +93,9 @@ jobs:
           persist-credentials: true
       - name: Configure Git
         run: |
-          git config --global user.name "OCI Update Bot"
-          git config --global user.email "luca.dreiling@bergfreunde.de"
-          
           git config --unset-all http.https://github.com/.extraheader
+          git config --global user.name "bf-luca"
+          git config --global user.email "luca.dreiling@bergfreunde.de"
       - name: Update deployment.yaml
         run: |
           echo ${{ github.sha }}
