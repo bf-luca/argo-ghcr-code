@@ -98,7 +98,8 @@ jobs:
           git config --global user.name "bf-luca"
           git config --global user.email "luca.dreiling@bergfreunde.de"
   
-          sed -i "s#bf-luca/argo-ghcr-code#bf-luca/argo-ghcr-code:${{ github.sha }}#g" bf-luca/argo-ghcr-k8s/deployment.yaml
+          sed -i "s#bf-luca/argo-ghcr-code#bf-luca/argo-ghcr-code:${{ github.sha }}#g" deployment.yaml
+
           git add -A
           git commit -m "update image for sha: ${{ github.sha }}"
           git push --set-upstream origin main
