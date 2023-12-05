@@ -30,10 +30,11 @@ jobs:
       run: go build -o helloserver ./helloserver
 
     - name: Archive artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v3
       with:
         name: helloserver-artifacts
         path: helloserver
+
 
   
   unit-tests:
@@ -92,6 +93,7 @@ jobs:
           git config --global user.name "bf-luca"
           echo ${{ github.sha }}
           sed -i "s#bf-luca/argo-ghcr-code#bf-luca/argo-ghcr-code:${{ github.sha }}#g" deployment.yaml
+          echo "s#bf-luca/argo-ghcr-code#bf-luca/argo-ghcr-code:${{ github.sha }}#g"
           git add -A
           git commit -am "update image for sha: ${{ github.sha }}"
       - run: echo ${{ github }}
