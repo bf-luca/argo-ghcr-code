@@ -24,6 +24,7 @@ runs:
         path: 'src'
         ref: 'main'
         persist-credentials: false
+    
     - name: Checkout dest
       uses: actions/checkout@v3
       with:
@@ -33,16 +34,19 @@ runs:
           token: ${{ secrets.PAT_GITHUB_TOKEN }}
           fetch_depth: 0
           persist-credentials: true
+    
     - name: Config 'dest'-repo
       shell: bash
       working-directory: dest
       run: |
         git config --global user.name "${{ inputs.manifest-push-user }}"
         git config --global user.email "${{ inputs.manifest-push-mail }}"
+    
     - name: Update package version
       shell: bash
       run: |
         sed -i "s#${{ inputs.ghcr-repo }}.*#${{ inputs.ghcr-repo }}:${{ github.sha }}#g" dest/deployment.yaml
+    
     - name: Detect changes
       id: hasNewFiles
       shell: bash
@@ -54,6 +58,7 @@ runs:
         else
           echo "::set-output name=hasNewFiles::false"
         fi
+    
     - name: Push changes if exits
       if: ${{ steps.hasNewFiles.outputs.hasNewFiles == 'true' }}
       shell: bash
