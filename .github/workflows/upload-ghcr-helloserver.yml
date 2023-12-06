@@ -17,18 +17,18 @@ jobs:
 
     steps:
     - name: Build and test go
-      uses: build-test-go
+      uses: ./.github/workflows/composite/build-test-go
       with:
         app-path: helloserver
 
     - name: Upload Dockerfile
-      uses: upload-dockerfile-ghcr
+      uses: ./.github/workflows/composite/upload-dockerfile-ghcr
       with:
         dockerhub-repo: bfminusluca/argo-ghcr-code
         app-path: helloserver
 
     - name: Set working directory
-      uses: sync-manifest
+      uses: ./.github/workflows/composite/sync-manifest
       with:
         app-path: helloserver
         manifest-push-user: bf-luca [bot]
