@@ -38,3 +38,4 @@ jobs:
         ghcr-repo: bf-luca/argo-ghcr-code
         manifest-push-user: bf-luca [bot]
         manifest-push-mail: luca.dreiling@bergfreunde.de
+        PAT_GITHUB_TOKEN: ${{ secrets.PAT_GITHUB_TOKEN }}

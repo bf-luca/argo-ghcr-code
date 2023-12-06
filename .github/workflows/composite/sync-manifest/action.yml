@@ -14,6 +14,10 @@ inputs:
     description: "Email that is used to commit changes to the manifest repo"
     type: string
     required: true
+  PAT_GITHUB_TOKEN:
+    description: "PAT to authenticate to the repo"
+    type: string
+    required: true
 
 runs:
   using: "composite"
@@ -31,7 +35,7 @@ runs:
           path: 'dest'
           ref: 'main'
           repository: ${{ inputs.ghcr-repo }}
-          token: ${{ secrets.PAT_GITHUB_TOKEN }}
+          token: ${{ inputs.PAT_GITHUB_TOKEN }}
           fetch_depth: 0
           persist-credentials: true
     
