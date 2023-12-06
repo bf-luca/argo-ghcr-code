@@ -56,21 +56,21 @@ runs:
         ls -la
         sed -i "s#${{ inputs.ghcr-repo }}-${{ inputs.app-name }}.*#${{ inputs.ghcr-repo }}:${{ github.sha }}#g" ./deployment-${{ inputs.app-name }}.yaml
     
-    - name: Detect changes
-      id: hasNewFiles
-      shell: bash
-      working-directory: dest
-      run: |
-        git commit -am "update with commit from ref: ${{ github.sha }}"
-        git status --porcelain | wc -l
-        if [[ $(git status --porcelain | wc -l) -gt 0 ]]; then
-          echo "hasNewFiles=true" >> "$GITHUB_OUTPUT"
-        else
-          echo "hasNewFiles=false" >> "$GITHUB_OUTPUT"
-        fi
+    #- name: Detect changes
+    #  id: hasNewFiles
+    #  shell: bash
+    #  working-directory: dest
+    #  run: |
+    #    git commit -am "update with commit from ref: ${{ github.sha }}"
+    #    git status --porcelain | wc -l
+    #    if [[ $(git status --porcelain | wc -l) -gt 0 ]]; then
+    #      echo "hasNewFiles=true" >> "$GITHUB_OUTPUT"
+    #    else
+    #      echo "hasNewFiles=false" >> "$GITHUB_OUTPUT"
+    #    fi
     
     - name: Push changes if exits
-      if: ${{ steps.hasNewFiles.outputs.hasNewFiles == 'true' }}
+      #if: ${{ steps.hasNewFiles.outputs.hasNewFiles == 'true' }}
       working-directory: dest
       shell: bash
       run: git push
