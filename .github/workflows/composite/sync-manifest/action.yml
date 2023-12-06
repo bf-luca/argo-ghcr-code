@@ -2,7 +2,7 @@ name: Build and Push to GHCR
 description: Builds and tests an go application, then pushes it to. Needs a PAT_GITHUB_TOKEN that can read/write packages and the repos.
 
 inputs:
-  app-path:
+  app-name:
     description: Relative path to the folder of the go app.
     type: tring
     required: true
@@ -54,7 +54,7 @@ runs:
       working-directory: dest
       run: |
         ls -la
-        sed -i "s#${{ inputs.ghcr-repo }}-${{ app-path }}.*#${{ inputs.ghcr-repo }}:${{ github.sha }}#g" ./deployment.yaml
+        sed -i "s#${{ inputs.ghcr-repo }}-${{ app-name }}.*#${{ inputs.ghcr-repo }}:${{ github.sha }}#g" ./deployment.yaml
     
     - name: Detect changes
       id: hasNewFiles
