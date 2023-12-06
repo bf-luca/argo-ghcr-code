@@ -29,6 +29,7 @@ runs:
       go mod tidy
 
   - name: Build
+    shell: bash
     run: go build -o ${{ inputs.app-path }} ./${{ inputs.app-path }}
 
   - name: Archive artifacts

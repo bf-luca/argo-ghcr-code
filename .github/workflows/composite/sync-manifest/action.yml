@@ -34,15 +34,18 @@ runs:
           fetch_depth: 0
           persist-credentials: true
     - name: Config 'dest'-repo
-      working-directory: dest  
+      shell: bash
+      working-directory: dest
       run: |
         git config --global user.name "${{ inputs.manifest-push-user }}"
         git config --global user.email "${{ inputs.manifest-push-mail }}"
     - name: Update package version
+      shell: bash
       run: |
         sed -i "s#${{ inputs.ghcr-repo }}.*#${{ inputs.ghcr-repo }}:${{ github.sha }}#g" dest/deployment.yaml
     - name: Detect changes
       id: hasNewFiles
+      shell: bash
       run: |
         git commit -am "update with commit from ref: ${{ github.sha }}"
         git status --porcelain | wc -l
@@ -53,4 +56,5 @@ runs:
         fi
     - name: Push changes if exits
       if: ${{ steps.hasNewFiles.outputs.hasNewFiles == 'true' }}
+      shell: bash
       run: git push
