@@ -19,8 +19,8 @@ func usage() {
 }
 
 var (
-	greeting = flag.String("g", "Hello", "Greet with `greeting`")
-	addr     = flag.String("addr", ":8080", "address to serve")
+	greeting = flag.String("g", "Hello", "Greet with `greeting` from helloserver")
+	addr     = flag.String("addr", ":8081", "address to serve")
 )
 
 func version(w http.ResponseWriter, r *http.Request) {
@@ -41,7 +41,7 @@ func greet(w http.ResponseWriter, r *http.Request) {
 	}
 
 	fmt.Fprintf(w, "<!DOCTYPE html>\n")
-	fmt.Fprintf(w, "%s, %s!\n", *greeting, html.EscapeString(name))
+	fmt.Fprintf(w, "%s, %s from helloserver!\n", *greeting, html.EscapeString(name))
 }
 
 func main() {
