@@ -48,12 +48,14 @@ runs:
     
     - name: Update package version
       shell: bash
+      working-directory: dest
       run: |
-        sed -i "s#${{ inputs.ghcr-repo }}.*#${{ inputs.ghcr-repo }}:${{ github.sha }}#g" dest/deployment.yaml
+        sed -i "s#${{ inputs.ghcr-repo }}.*#${{ inputs.ghcr-repo }}:${{ github.sha }}#g" deployment.yaml
     
     - name: Detect changes
       id: hasNewFiles
       shell: bash
+      working-directory: dest
       run: |
         git commit -am "update with commit from ref: ${{ github.sha }}"
         git status --porcelain | wc -l
@@ -65,5 +67,6 @@ runs:
     
     - name: Push changes if exits
       if: ${{ steps.hasNewFiles.outputs.hasNewFiles == 'true' }}
+      working-directory: dest
       shell: bash
       run: git push
