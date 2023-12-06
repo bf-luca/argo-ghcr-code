@@ -53,7 +53,7 @@ runs:
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
-        username: ${{ inputs.git_user }}
+        username: ${{ inputs.ghcr-user }}
         password: ${{ inputs.PW_TOKEN }}
     
     - name: Build and push Docker image
