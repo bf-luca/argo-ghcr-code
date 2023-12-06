@@ -2,7 +2,7 @@ name: Build and Push to GHCR
 description: Builds and tests an go application, then pushes it to. Needs a PAT_GITHUB_TOKEN that can read/write packages and the repos.
 
 inputs:
-  ghcr-repo:
+  manifest-repo:
     description: "Path to the ghcr repo holding the packages (usually: '<user>/<repo>')"
     type: string
     required: true
