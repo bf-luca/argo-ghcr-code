@@ -6,8 +6,12 @@ inputs:
     description: Relative path to the folder of the go app.
     type: string
     required: true
+  code-repo:
+    description: "Path to the code repo holding the packages (usually: '<user>/<repo>')"
+    type: string
+    required: true
   manifest-repo:
-    description: "Path to the ghcr repo holding the packages (usually: '<user>/<repo>')"
+    description: "Path to the ghcr repo holding the helm/k8s deployments"
     type: string
     required: true
   manifest-push-user:
