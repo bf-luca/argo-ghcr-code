@@ -67,5 +67,5 @@ runs:
         context: .
         push: ${{ github.ref == 'refs/heads/main' }}
         tags: |
-          ${{ inputs.dockerhub-repo }}:${{ github.sha }}
-          ghcr.io/bf-luca/${{ inputs.ghcr-repo }}:${{ github.sha }}
+          ${{ inputs.dockerhub-repo }}-${{ inputs.app-name }}:${{ github.sha }}
+          ghcr.io/${{ inputs.ghcr-repo }}-${{ inputs.app-name }}:${{ github.sha }}
