@@ -12,6 +12,10 @@ inputs:
     description: "Name that is used as a postfix for the dockerfile: 'Dockerfile-<app-name>'"
     type: string
     required: true
+  ghcr-user:
+    description: "User to login to ghcr.io"
+    type: string
+    required: true
   PW_TOKEN:
     description: "A password token for the lokal repo in form of the GITHUB_TOKEN"
     type: string
@@ -49,7 +53,7 @@ runs:
       uses: docker/login-action@v3
       with:
         registry: ghcr.io
-        username: bf-luca
+        username: ${{ inputs.git_user }}
         password: ${{ inputs.PW_TOKEN }}
     
     - name: Build and push Docker image

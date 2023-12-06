@@ -26,6 +26,10 @@ jobs:
       with:
         app-path: helloserver
         dockerhub-repo: bfminusluca/argo-ghcr-code
+        ghcr-user: bf-luca
+        PW_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Set working directory
       uses: ./.github/workflows/composite/sync-manifest
@@ -33,6 +37,3 @@ jobs:
         app-path: helloserver
         manifest-push-user: bf-luca [bot]
         manifest-push-mail: luca.dreiling@bergfreunde.de
-        PW_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        DOCKER_USER: ${{ secrets.DOCKER_USER }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
