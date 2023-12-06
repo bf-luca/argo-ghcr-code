@@ -64,4 +64,4 @@ runs:
         push: ${{ github.ref == 'refs/heads/main' }}
         tags: |
           ${{ inputs.dockerhub-repo }}:${{ github.sha }}
-          ghcr.io/${{ github.event.repository.name }}:${{ github.sha }}
+          ghcr.io/${{ github.event.repository }}:${{ github.sha }}
