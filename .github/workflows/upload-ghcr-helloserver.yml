@@ -35,6 +35,7 @@ jobs:
     - name: Set working directory
       uses: ./.github/workflows/composite/sync-manifest
       with:
+        app-name: helloserver
         manifest-repo: bf-luca/argo-ghcr-k8s
         manifest-push-user: bf-luca [bot]
         manifest-push-mail: luca.dreiling@bergfreunde.de
