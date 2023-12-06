@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - '.github/workflows'
-      - 'helloserver'
+      - '.github/workflows/**'
+      - 'helloserver/**'
       - 'Dockerfile-helloserver'
 
 jobs:
