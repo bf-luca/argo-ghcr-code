@@ -4,8 +4,12 @@ description: |
   (Requires secrets DOCKER_USER and DOCKER_PASSWORD)
 
 inputs:
-  dockerhub-repo:
+  ghcr-repo:
     description: "Path to the ghcr repo holding the packages (usually: '<user>/<repo>')"
+    type: string
+    required: true
+  dockerhub-repo:
+    description: "Path to the dockerhub repo holding the packages (usually: '<user>/<repo>')"
     type: string
     required: true
   app-name:
@@ -63,5 +67,5 @@ runs:
         context: .
         push: ${{ github.ref == 'refs/heads/main' }}
         tags: |
-          ${{ inputs.dockerhub-repo }}:${{ github.sha }}
-          ghcr.io/${{ github.event.repository }}:${{ github.sha }}
+          ${{ inputs.ghcr-repo }}:${{ github.sha }}
+          ghcr.io/bf-luca/${{ inputs.ghcr-repo }}:${{ github.sha }}
