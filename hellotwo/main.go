@@ -6,5 +6,5 @@ import (
 )
 
 func main() {
-    fmt.Println("hello world from: ", os.Getenv("NAME"))
+    fmt.Println("hello world")
 }
