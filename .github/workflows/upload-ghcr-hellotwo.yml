@@ -32,7 +32,7 @@ jobs:
         DOCKER_USER: ${{ secrets.DOCKER_USER }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Set working directory
+    - name: Sync manifest
       uses: ./.github/workflows/composite/sync-manifest
       with:
         app-name: hellotwo
