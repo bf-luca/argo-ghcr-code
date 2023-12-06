@@ -1,4 +1,4 @@
-name: Build and Push to GHCR
+name: Build and Push to GHCR (Helloserver)
 
 on:
   workflow_dispatch:
@@ -8,9 +8,6 @@ on:
       - './helloserver/*'
       - './Dockerfile-helloserver'
 
-# Not very safe
-permissions: write-all
-
 jobs:
   build-app:
     runs-on: ubuntu-latest
@@ -18,11 +15,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
+    
     - name: Build and test go
       uses: ./.github/workflows/composite/build-test-go
       with:
         app-path: helloserver
-
+    
     - name: Upload Dockerfile
       uses: ./.github/workflows/composite/upload-dockerfile-ghcr
       with:

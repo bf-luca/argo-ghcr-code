@@ -19,18 +19,20 @@ runs:
       go-version: '1.21'
 
   - name: Set working directory
-    run: cd ${{ app-path }}
+    shell: bash
+    run: cd ${{ inputs.app-path }}
 
   - name: Initialize Go module
+    shell: bash
     run: |
-      go mod init github.com/${{ github.event.repository.name }}/${{ app-path }}
+      go mod init github.com/${{ github.event.repository.name }}/${{ inputs.app-path }}
       go mod tidy
 
   - name: Build
-    run: go build -o ${{ app-path }} ./${{ app-path }}
+    run: go build -o ${{ inputs.app-path }} ./${{ inputs.app-path }}
 
   - name: Archive artifacts
     uses: actions/upload-artifact@v3
     with:
-      name: ${{ app-path }}-artifacts
-      path: ${{ app-path }}
+      name: ${{ inputs.app-path }}-artifacts
+      path: ${{ inputs.app-path }}
