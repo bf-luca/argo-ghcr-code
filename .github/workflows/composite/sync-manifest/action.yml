@@ -70,7 +70,7 @@ runs:
         fi
     
     - name: Push changes if exits
-      if: ${{ needs.hasNewFiles.outputs.hasNewFiles == 'true' }}
+      if: ${{ steps.hasNewFiles.outputs.hasNewFiles == 'true' }}
       working-directory: dest
       shell: bash
       run: git push
