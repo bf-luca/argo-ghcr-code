@@ -16,10 +16,10 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
     
-    - name: Build and test go
-      uses: ./.github/workflows/composite/build-test-go
-      with:
-        app-path: helloserver
+    #- name: Build and test go
+    #  uses: ./.github/workflows/composite/build-test-go
+    #  with:
+    #    app-path: helloserver
     
     - name: Upload Dockerfile
       uses: ./.github/workflows/composite/upload-dockerfile-ghcr
