@@ -4,109 +4,38 @@ on:
   workflow_dispatch:
   push:
     paths:
-      - './.github/workflows/*'
-      - './hellotwo/*'
-      - './Dockerfile-hellotwo'
-
-# Not very safe
-permissions: write-all
+      - '.github/workflows/*'
+      - 'hellotwo/*'
+      - 'Dockerfile-hellotwo'
 
 jobs:
-  build-app:
+  update-manifest:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-
-    - name: Set up Go
-      uses: actions/setup-go@v4
+    
+    - name: Build and test go
+      uses: ./.github/workflows/composite/build-test-go
       with:
-        go-version: '1.21'
+        app-path: helloserver
+    
+    - name: Upload Dockerfile
+      uses: ./.github/workflows/composite/upload-dockerfile-ghcr
+      with:
+        app-name: helloserver
+        ghcr-repo: bf-luca/argo-ghcr-code
+        dockerhub-repo: bfminusluca/argo-ghcr-code
+        ghcr-user: bf-luca
+        PW_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        DOCKER_USER: ${{ secrets.DOCKER_USER }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
     - name: Set working directory
-      run: cd hellotwo
-
-    - name: Initialize Go module
-      run: |
-        go mod init github.com/bf-luca/argo-ghcr-code/hellotwo
-        go mod tidy
-
-    - name: Build
-      run: go build -o hellotwo ./hellotwo
-
-    - name: Archive artifacts
-      uses: actions/upload-artifact@v3
+      uses: ./.github/workflows/composite/sync-manifest
       with:
-        name: hellotwo-artifacts
-        path: hellotwo
-  
-  unit-tests:
-    runs-on: ubuntu-latest
-    needs: build-app
-    steps:
-      - uses: actions/checkout@v3
-      - run: echo doing testing
-  
-  build-and-push-ghcr:
-    runs-on: ubuntu-latest
-    needs: unit-tests
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Set up docker buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Log in to GitHub container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: bf-luca
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          file: Dockerfile-helloserver
-          context: .
-          push: ${{ github.ref == 'refs/heads/main' }}
-          tags: |
-            bfminusluca/argo-ghcr-code:${{ github.sha }}
-            ghcr.io/bf-luca/argo-ghcr-code:${{ github.sha }}
-  
-  update-manifest-repo:
-    runs-on: ubuntu-latest
-    needs: build-and-push-ghcr
-    steps:
-      - name: Checkout src
-        uses: actions/checkout@v3
-        with:
-          path: 'src'
-          ref: 'main'
-          persist-credentials: false
-      - name: Checkout dest
-        uses: actions/checkout@v3
-        with:
-            path: 'dest'
-            ref: 'main'
-            repository: 'bf-luca/argo-ghcr-k8s'
-            token: ${{ secrets.PAT_GITHUB_TOKEN }}
-            fetch_depth: 0
-            persist-credentials: true
-      - name: Update helm version
-        run: |
-          sed -i "s#bf-luca/argo-ghcr-code#bf-luca/argo-ghcr-code:${{ github.sha }}#g" dest/deployment.yaml
-      - name: Push new files
-        working-directory: dest  
-        run: |
-          git config --global user.name "bf-luca [bot]"
-          git config --global user.email "luca.dreiling@bergfreunde.de"
-          git commit -am "update with commit from ref: ${{ github.sha }}"
-          git push
+        manifest-repo: bf-luca/argo-ghcr-k8s
+        manifest-push-user: bf-luca [bot]
+        manifest-push-mail: luca.dreiling@bergfreunde.de
+        PAT_GITHUB_TOKEN: ${{ secrets.PAT_GITHUB_TOKEN }}

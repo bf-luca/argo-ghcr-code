@@ -9,7 +9,7 @@ on:
       - 'Dockerfile-helloserver'
 
 jobs:
-  build-app:
+  update-manifest:
     runs-on: ubuntu-latest
 
     steps:
