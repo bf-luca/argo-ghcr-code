@@ -53,8 +53,7 @@ runs:
       shell: bash
       working-directory: dest
       run: |
-        ls -la
-        sed -i "s#${{ inputs.ghcr-repo }}-${{ inputs.app-name }}.*#${{ inputs.ghcr-repo }}:${{ github.sha }}#g" ./deployment-${{ inputs.app-name }}.yaml
+        sed -i "s#${{ inputs.manifest-repo }}-${{ inputs.app-name }}.*#${{ inputs.manifest-repo }}:${{ github.sha }}#g" ./deployment-${{ inputs.app-name }}.yaml
     
     #- name: Detect changes
     #  id: hasNewFiles
