@@ -64,13 +64,13 @@ runs:
         git commit -am "update with commit from ref: ${{ github.sha }}"
         git status --porcelain | wc -l
         if [[ $(git status --porcelain | wc -l) -gt 0 ]]; then
-          echo "::set-output name=hasNewFiles::true"
+          echo "hasNewFiles=true" >> "$GITHUB_OUTPUT"
         else
-          echo "::set-output name=hasNewFiles::false"
+          echo "hasNewFiles=false" >> "$GITHUB_OUTPUT"
         fi
     
     - name: Push changes if exits
-      if: ${{ steps.hasNewFiles.outputs.hasNewFiles == 'true' }}
+      if: ${{ needs.hasNewFiles.outputs.hasNewFiles == 'true' }}
       working-directory: dest
       shell: bash
       run: git push
