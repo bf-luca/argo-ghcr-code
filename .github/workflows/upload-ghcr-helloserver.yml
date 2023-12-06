@@ -16,97 +16,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v3
-
-    - name: Set up Go
-      uses: actions/setup-go@v4
+    - name: Build and test go
+      uses: build-test-go
       with:
-        go-version: '1.21'
+        app-path: helloserver
+
+    - name: Upload Dockerfile
+      uses: upload-dockerfile-ghcr
+      with:
+        dockerhub-repo: bfminusluca/argo-ghcr-code
+        app-path: helloserver
 
     - name: Set working directory
-      run: cd helloserver
-
-    - name: Initialize Go module
-      run: |
-        go mod init github.com/bf-luca/argo-ghcr-code/helloserver
-        go mod tidy
-
-    - name: Build
-      run: go build -o helloserver ./helloserver
-
-    - name: Archive artifacts
-      uses: actions/upload-artifact@v3
+      uses: sync-manifest
       with:
-        name: helloserver-artifacts
-        path: helloserver
-  
-  unit-tests:
-    runs-on: ubuntu-latest
-    needs: build-app
-    steps:
-      - uses: actions/checkout@v3
-      - run: echo doing testing
-  
-  build-and-push-ghcr:
-    runs-on: ubuntu-latest
-    needs: unit-tests
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Set up docker buildx
-        id: buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to DockerHub
-        uses: docker/login-action@v3
-        with:
-          username: ${{ secrets.DOCKER_USER }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-      - name: Log in to GitHub container registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: bf-luca
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          file: Dockerfile-helloserver
-          context: .
-          push: ${{ github.ref == 'refs/heads/main' }}
-          tags: |
-            bfminusluca/argo-ghcr-code:${{ github.sha }}
-            ghcr.io/bf-luca/argo-ghcr-code:${{ github.sha }}
-  
-  update-manifest-repo:
-    runs-on: ubuntu-latest
-    needs: build-and-push-ghcr
-    steps:
-      - name: Checkout src
-        uses: actions/checkout@v3
-        with:
-          path: 'src'
-          ref: 'main'
-          persist-credentials: false
-      - name: Checkout dest
-        uses: actions/checkout@v3
-        with:
-            path: 'dest'
-            ref: 'main'
-            repository: 'bf-luca/argo-ghcr-k8s'
-            token: ${{ secrets.PAT_GITHUB_TOKEN }}
-            fetch_depth: 0
-            persist-credentials: true
-      - name: Update helm version
-        run: |
-          sed -i "s#bf-luca/argo-ghcr-code#bf-luca/argo-ghcr-code:${{ github.sha }}#g" dest/deployment.yaml
-      - name: Push new files
-        working-directory: dest  
-        run: |
-          git config --global user.name "bf-luca [bot]"
-          git config --global user.email "luca.dreiling@bergfreunde.de"
-          git commit -am "update with commit from ref: ${{ github.sha }}"
-          git push
+        app-path: helloserver
+        manifest-push-user: bf-luca [bot]
+        manifest-push-mail: luca.dreiling@bergfreunde.de

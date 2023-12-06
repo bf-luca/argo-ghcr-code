@@ -1,0 +1,56 @@
+name: Build and Push to GHCR
+description: Builds and tests an go application, then pushes it to. Needs a PAT_GITHUB_TOKEN that can read/write packages and the repos.
+
+inputs:
+  ghcr-repo:
+    description: "Path to the ghcr repo holding the packages (usually: '<user>/<repo>')"
+    type: string
+    required: true
+  manifest-push-user:
+    description: "User(name) that is used to commit changes to the manifest repo"
+    type: string
+    required: true
+  manifest-push-mail:
+    description: "Email that is used to commit changes to the manifest repo"
+    type: string
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout src
+      uses: actions/checkout@v3
+      with:
+        path: 'src'
+        ref: 'main'
+        persist-credentials: false
+    - name: Checkout dest
+      uses: actions/checkout@v3
+      with:
+          path: 'dest'
+          ref: 'main'
+          repository: ${{ inputs.ghcr-repo }}
+          token: ${{ secrets.PAT_GITHUB_TOKEN }}
+          fetch_depth: 0
+          persist-credentials: true
+    - name: Config 'dest'-repo
+      working-directory: dest  
+      run: |
+        git config --global user.name "${{ inputs.manifest-push-user }}"
+        git config --global user.email "${{ inputs.manifest-push-mail }}"
+    - name: Update package version
+      run: |
+        sed -i "s#${{ inputs.ghcr-repo }}.*#${{ inputs.ghcr-repo }}:${{ github.sha }}#g" dest/deployment.yaml
+    - name: Detect changes
+      id: hasNewFiles
+      run: |
+        git commit -am "update with commit from ref: ${{ github.sha }}"
+        git status --porcelain | wc -l
+        if [[ $(git status --porcelain | wc -l) -gt 0 ]]; then
+          echo "::set-output name=hasNewFiles::true"
+        else
+          echo "::set-output name=hasNewFiles::false"
+        fi
+    - name: Push changes if exits
+      if: ${{ steps.hasNewFiles.outputs.hasNewFiles == 'true' }}
+      run: git push

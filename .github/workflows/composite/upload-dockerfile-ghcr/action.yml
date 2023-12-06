@@ -1,0 +1,47 @@
+name: Build Dockerfile and Push to GHCR
+description: |
+  Builda an Dockerfile and pushes it to GHCR 
+  (Requires secrets DOCKER_USER and DOCKER_PASSWORD)
+
+inputs:
+  dockerhub-repo:
+    description: "Path to the ghcr repo holding the packages (usually: '<user>/<repo>')"
+    type: string
+    required: true
+  app-name:
+    description: "Name that is used as a postfix for the dockerfile: 'Dockerfile-${{ inputs.app-name }}'"
+    type: string
+    required: true
+
+permissions:
+  contents: read
+  packages: write
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Set up docker buildx
+      id: buildx
+      uses: docker/setup-buildx-action@v2
+    - name: Login to DockerHub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USER }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+    - name: Log in to GitHub container registry
+      uses: docker/login-action@v3
+      with:
+        registry: ghcr.io
+        username: bf-luca
+        password: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        file: Dockerfile-${{ inputs.app-name }}
+        context: .
+        push: ${{ github.ref == 'refs/heads/main' }}
+        tags: |
+          ${{ dockerhub-repo }}:${{ github.sha }}
+          ghcr.io/${{ github.event.repository.name }}:${{ github.sha }}

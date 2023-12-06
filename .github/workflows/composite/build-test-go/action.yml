@@ -1,0 +1,36 @@
+name: Build push Go app
+description: Builds an go app and uploads an artifact
+
+inputs:
+  app-path:
+    description: Relative path to the folder of the go app.
+    type: tring
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v3
+
+  - name: Set up Go
+    uses: actions/setup-go@v4
+    with:
+      go-version: '1.21'
+
+  - name: Set working directory
+    run: cd ${{ app-path }}
+
+  - name: Initialize Go module
+    run: |
+      go mod init github.com/${{ github.event.repository.name }}/${{ app-path }}
+      go mod tidy
+
+  - name: Build
+    run: go build -o ${{ app-path }} ./${{ app-path }}
+
+  - name: Archive artifacts
+    uses: actions/upload-artifact@v3
+    with:
+      name: ${{ app-path }}-artifacts
+      path: ${{ app-path }}
