@@ -5,6 +5,7 @@ on:
   push:
     paths:
       - '.github/workflows/*'
+      - '.github/workflows/composite'
       - 'helloserver/*'
       - 'Dockerfile-helloserver'
 
@@ -36,6 +37,7 @@ jobs:
       uses: ./.github/workflows/composite/sync-manifest
       with:
         app-name: helloserver
+        code-repo: bf-luca/argo-ghcr-code
         manifest-repo: bf-luca/argo-ghcr-k8s
         manifest-push-user: bf-luca [bot]
         manifest-push-mail: luca.dreiling@bergfreunde.de
