@@ -34,9 +34,8 @@ runs:
       with:
           path: 'dest'
           ref: 'main'
-          repository: ${{ inputs.ghcr-repo }}
+          repository: ${{ inputs.manifest-repo }}
           token: ${{ inputs.PAT_GITHUB_TOKEN }}
-          fetch_depth: 0
           persist-credentials: true
     
     - name: Config 'dest'-repo
