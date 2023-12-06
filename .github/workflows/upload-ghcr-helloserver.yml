@@ -24,7 +24,7 @@ jobs:
     - name: Upload Dockerfile
       uses: ./.github/workflows/composite/upload-dockerfile-ghcr
       with:
-        app-path: helloserver
+        app-name: helloserver
         dockerhub-repo: bfminusluca/argo-ghcr-code
         ghcr-user: bf-luca
         PW_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -34,6 +34,6 @@ jobs:
     - name: Set working directory
       uses: ./.github/workflows/composite/sync-manifest
       with:
-        app-path: helloserver
+        ghcr-repo: ${{ github.event.repository.name }}
         manifest-push-user: bf-luca [bot]
         manifest-push-mail: luca.dreiling@bergfreunde.de
