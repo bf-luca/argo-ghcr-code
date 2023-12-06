@@ -11,7 +11,7 @@ RUN go mod init github.com/bf-luca/argo-ghcr-code/hellotwo && go mod tidy
 RUN go build .
  
 # Tells Docker which network port your container listens on
-EXPOSE 8081
+EXPOSE 8080
  
 # Specifies the executable command that runs when the container starts
 ENTRYPOINT [ "./hellotwo" ]
